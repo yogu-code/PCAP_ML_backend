@@ -10,17 +10,10 @@ def preprocess():
         # Read request JSON
         data = request.get_json()
         file_path = data.get('file_path')
-        label_column = data.get('label_column')
-        columns_to_drop = data.get('columns_to_drop', [])
         scaler_save_path = 'models/'
 
         print(f"Received file_path: {file_path}")
-        print(f"Received label_column: {label_column}")
-        print(f"Columns to drop: {columns_to_drop}")
 
-        if not file_path or not label_column:
-            return jsonify({'error': 'file_path and label_column are required'}), 400
-        
         # Validate file exists
         if not os.path.exists(file_path):
             return jsonify({'error': f'File not found: {file_path}'}), 400
@@ -29,8 +22,6 @@ def preprocess():
         try:
             X_scaled, y, scaler, preview = preprocess_pcap_csv(
                 file_path,
-                label_column,
-                columns_to_drop,
                 os.path.join(scaler_save_path, 'scaler.pkl')
             )
         except Exception as preprocess_error:

@@ -1,4 +1,4 @@
-def preprocess_pcap_csv(csv_path, label_column, columns_to_drop, scaler_save_path, preview_rows=5):
+def preprocess_pcap_csv(csv_path, scaler_save_path, preview_rows=5):
     import pandas as pd
     import numpy as np
     from sklearn.preprocessing import RobustScaler
@@ -6,8 +6,9 @@ def preprocess_pcap_csv(csv_path, label_column, columns_to_drop, scaler_save_pat
     import os
     #Loading dataset
     df = pd.read_csv(csv_path)
+    label_column = df['label']
     #Dropping specified columns
-    df.drop(columns=columns_to_drop, inplace=True, errors='ignore')
+    df.drop(columns=["Flow ID", "Timestamp", "Label", "Src IP", "Dst IP", "Src Port", "Dst Port"], inplace=True, errors='ignore')
     #Replacing infinite values with NaN and filling NaN with median
     df.replace([np.inf, -np.inf], np.nan, inplace=True)
     # Filling NaN values with median of each column
